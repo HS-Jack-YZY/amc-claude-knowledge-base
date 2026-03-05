@@ -36,7 +36,7 @@ A comprehensive Amazon Marketing Cloud (AMC) knowledge base designed for [Claude
 ### Quick Install
 
 ```bash
-git clone https://github.com/user/amc-claude-knowledge-base.git
+git clone https://github.com/HS-Jack-YZY/amc-claude-knowledge-base.git
 cd amc-claude-knowledge-base
 ./install.sh /path/to/your/project
 ```
@@ -107,7 +107,7 @@ MIT
 ### 安装方式
 
 ```bash
-git clone https://github.com/user/amc-claude-knowledge-base.git
+git clone https://github.com/HS-Jack-YZY/amc-claude-knowledge-base.git
 cd amc-claude-knowledge-base
 ./install.sh /path/to/your/project
 ```
