@@ -1,0 +1,11 @@
+# AMC Knowledge Base Rules
+
+## AMC SQL Knowledge Base
+
+When the user mentions AMC, Amazon Marketing Cloud, or needs to write AMC SQL queries:
+
+1. First read `knowledge_base/README.md` for the table index and SQL tips
+2. Read the corresponding table schema files under `knowledge_base/` based on the query requirements
+3. When writing SQL, strictly follow aggregation threshold rules (VERY_HIGH fields cannot appear in the final SELECT)
+
+You can also use the `/amc` command to enter AMC SQL assistant mode.
