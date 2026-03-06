@@ -6,7 +6,8 @@
 
 1. **读取知识库索引**：先读取 `/Users/yuanzheyi/GL-iNet/AMC/knowledge_base/README.md`，了解所有可用表和 SQL 技巧
 2. **读取相关表结构**：根据用户需求，读取对应的表结构文件（在 `knowledge_base/` 子目录中），获取字段名、类型、描述和聚合阈值
-3. **编写 SQL**：基于表结构编写正确的 AMC SQL 查询
+3. **读取 SQL 参考**：如需使用特定函数或表达式，参考 `knowledge_base/sql_reference/` 目录下的文档（functions.md、expressions.md、limitations.md 等）
+4. **编写 SQL**：基于表结构和 SQL 参考编写正确的 AMC SQL 查询
 
 ## 关键规则
 

@@ -1,8 +1,28 @@
 # AMC (Amazon Marketing Cloud) Knowledge Base
 
-This knowledge base contains schema documentation for all AMC data source tables, designed for use by Claude AI when writing AMC SQL queries.
+This knowledge base contains comprehensive documentation for Amazon Marketing Cloud, including concepts, SQL reference, and data source table schemas — designed for use by Claude AI when writing AMC SQL queries and answering AMC questions.
 
-**Source:** [Amazon Ads API - AMC Data Sources](https://advertising.amazon.com/API/docs/en-us/guides/amazon-marketing-cloud/datasources/overview)
+**Source:** [Amazon Ads API - AMC Documentation](https://advertising.amazon.com/API/docs/en-us/guides/amazon-marketing-cloud/datasources/overview)
+
+---
+
+## Concepts
+
+| Topic | Description |
+|-------|-------------|
+| [Overview & Availability](concepts/overview.md) | What is AMC, benefits, key features, supported regions |
+| [How AMC Works](concepts/how_it_works.md) | Access methods, accounts/instances, data, queries, privacy |
+| [Aggregation Threshold Guide](concepts/aggregation_threshold.md) | Detailed threshold levels, rules, practical examples |
+
+## SQL Reference
+
+| Topic | Description |
+|-------|-------------|
+| [SQL Overview](sql_reference/overview.md) | Data types, operators, grammar |
+| [SQL Basics](sql_reference/basics.md) | SELECT, JOIN, WHERE, GROUP BY, HAVING, CTEs, LIMIT |
+| [Functions](sql_reference/functions.md) | String, math, aggregate, date/time, conditional, array, window, hash, JSON, statistical |
+| [Expressions](sql_reference/expressions.md) | CONTAINED_IN, BUILT_IN_PARAMETER, CUSTOM_PARAMETER, UUID |
+| [Limitations](sql_reference/limitations.md) | Unsupported features, workarounds, mandatory requirements |
 
 ---
 
@@ -117,6 +137,21 @@ Each column has an aggregation threshold level that determines how it can be use
   - **Microcents**: divide by `100,000,000` to get dollars (fields like `supply_cost`, `audience_fee`, `platform_fee`)
   - **Millicents**: divide by `100,000` to get dollars (fields like `impression_cost`, `total_cost`)
 
+### SQL Syntax Limitations
+
+AMC SQL has the following syntax restrictions:
+
+| Clause | Status | Notes |
+|--------|--------|-------|
+| `ORDER BY` | **Standalone: not supported.** Supported within `PARTITION BY` window clauses. | Use `RANK()` / `ROW_NUMBER()` with `PARTITION BY ... ORDER BY` for ordering |
+| `SELECT *` | Not supported | Always list column names explicitly |
+| `RIGHT JOIN` | Not supported | Swap tables and use `LEFT JOIN` instead |
+| Aggregation | **Required** | Every query must include at least one aggregate function |
+
+`LIMIT` **is supported** — use it to cap the number of returned rows.
+
+For full details, see [Limitations & Unsupported Features](sql_reference/limitations.md).
+
 ### Amazon Retail Purchases (ARP) Notes
 
 - Contains **60 months** (5 years) of historical purchase data vs **13 months** in other datasets
@@ -192,4 +227,21 @@ SELECT
   (SUM(total_cost) / 100000.0) / (SUM(impressions) / 1000.0) AS cpm_dollars
 FROM dsp_impressions
 GROUP BY campaign
+```
+
+### Daily Clicks by Product (ASIN)
+
+Query daily click, impression, and spend data per product ASIN from Sponsored Ads. Note: `creative_asin` is only populated for a subset of Sponsored Products and Sponsored Display events; other ad types will have NULL values (filtered out below).
+
+```sql
+SELECT
+  event_date,
+  ad_product_type,
+  creative_asin,
+  SUM(clicks) AS total_clicks,
+  SUM(impressions) AS total_impressions,
+  SUM(spend) / 100000000.0 AS total_spend
+FROM sponsored_ads_traffic
+WHERE creative_asin IS NOT NULL
+GROUP BY event_date, ad_product_type, creative_asin
 ```

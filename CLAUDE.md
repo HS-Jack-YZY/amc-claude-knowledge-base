@@ -9,3 +9,7 @@
 3. 编写 SQL 时严格遵守聚合阈值规则（VERY_HIGH 字段不能出现在最终 SELECT）
 
 也可以使用 `/amc` 命令直接进入 AMC SQL 助手模式。
+
+## SQL 查询目录
+
+已编写的 AMC SQL 查询存放在 `queries/` 目录下，详见 `queries/README.md`。
