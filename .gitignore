@@ -4,12 +4,8 @@
 # Node
 node_modules/
 
-# Playwright MCP temp files
-.playwright-mcp/
-
 # Personal/private files
 amc_queries.md
-dsp_impressions_snapshot.md
 
 # Claude Code internal files
 .claude/plans/
