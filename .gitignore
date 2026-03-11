@@ -12,3 +12,5 @@ amc_queries.md
 .claude/settings*
 .claude/projects/
 .claude/memory/
+
+.playwright-mcp
