@@ -13,6 +13,8 @@ This knowledge base contains comprehensive documentation for Amazon Marketing Cl
 | [Overview & Availability](concepts/overview.md) | What is AMC, benefits, key features, supported regions |
 | [How AMC Works](concepts/how_it_works.md) | Access methods, accounts/instances, data, queries, privacy |
 | [Aggregation Threshold Guide](concepts/aggregation_threshold.md) | Detailed threshold levels, rules, practical examples |
+| [API Guide](concepts/api_guide.md) | Authentication, base URLs, headers, marketplace IDs, first API call, S3 setup |
+| [Workflow Management](concepts/workflow_management.md) | Create/execute/schedule workflows, custom parameters, get results |
 
 ## SQL Reference
 

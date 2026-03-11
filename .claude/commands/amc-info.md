@@ -7,6 +7,8 @@
 1. **读取知识库索引**：先读取 `/Users/yuanzheyi/GL-iNet/AMC/knowledge_base/README.md`，了解知识库的整体结构
 2. **定位相关文档**：根据用户问题的类型，读取对应的文档：
    - 概念类问题（什么是 AMC、怎么工作、支持哪些地区）→ `knowledge_base/concepts/` 目录
+   - API 类问题（如何调用 API、认证方式、Header 参数、Marketplace ID）→ `knowledge_base/concepts/api_guide.md`
+   - Workflow 管理类问题（创建/执行/调度查询、获取结果、自定义参数）→ `knowledge_base/concepts/workflow_management.md`
    - SQL 语法类问题（支持哪些函数、数据类型、语法限制）→ `knowledge_base/sql_reference/` 目录
    - 聚合阈值类问题 → `knowledge_base/concepts/aggregation_threshold.md`
    - 表结构类问题（某个表有哪些字段）→ `knowledge_base/` 下对应的表结构文件
