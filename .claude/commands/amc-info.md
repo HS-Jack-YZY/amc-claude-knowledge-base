@@ -4,7 +4,7 @@
 
 ## 操作步骤
 
-1. **读取知识库索引**：先读取 `/Users/yuanzheyi/GL-iNet/AMC/knowledge_base/README.md`，了解知识库的整体结构
+1. **读取知识库索引**：先读取 `knowledge_base/README.md`，了解知识库的整体结构
 2. **定位相关文档**：根据用户问题的类型，读取对应的文档：
    - 概念类问题（什么是 AMC、怎么工作、支持哪些地区）→ `knowledge_base/concepts/` 目录
    - API 类问题（如何调用 API、认证方式、Header 参数、Marketplace ID）→ `knowledge_base/concepts/api_guide.md`
