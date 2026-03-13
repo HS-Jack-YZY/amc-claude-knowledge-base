@@ -51,6 +51,7 @@ These tables contain pairs of traffic and conversion events. "Traffic events" ar
 | Conversions | `conversions` | `conversions_for_audiences` | [conversions/conversions.md](conversions/conversions.md) |
 | Conversions with Relevance | `conversions_with_relevance` | `conversions_with_relevance_for_audiences` | [conversions/conversions_with_relevance.md](conversions/conversions_with_relevance.md) |
 | Attributed Events by Conversion Time | `amazon_attributed_events_by_conversion_time` | `amazon_attributed_events_by_conversion_time_for_audiences` | [conversions/amazon_attributed_events_by_conversion_time.md](conversions/amazon_attributed_events_by_conversion_time.md) |
+| Attributed Events by Traffic Time | `amazon_attributed_events_by_traffic_time` | `amazon_attributed_events_by_traffic_time_for_audiences` | [conversions/amazon_attributed_events_by_traffic_time.md](conversions/amazon_attributed_events_by_traffic_time.md) |
 
 ### Sponsored Ads Table
 
