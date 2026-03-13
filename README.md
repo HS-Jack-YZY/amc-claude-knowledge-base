@@ -15,6 +15,7 @@ Amazon Marketing Cloud (AMC) 是亚马逊广告的数据分析云平台。本知
 - SQL 语法参考（函数、表达式、限制等）
 - 可直接使用的 SQL 查询模板
 - `/amc` 和 `/amc-info` 两个交互式 slash command
+- `amc-expert` agent：自动识别 AMC 相关对话并提供 SQL 编写和知识问答支持
 
 ## 包含内容
 
@@ -70,7 +71,8 @@ Amazon Marketing Cloud (AMC) 是亚马逊广告的数据分析云平台。本知
 
 1. 复制 `knowledge_base/` 目录到你的项目根目录
 2. 复制 `.claude/commands/amc.md` 和 `.claude/commands/amc-info.md` 到项目的 `.claude/commands/` 目录
-3. 在项目的 `CLAUDE.md` 中添加以下 AMC 规则：
+3. 复制 `.claude/agents/amc-expert.md` 到项目的 `.claude/agents/` 目录（可选，启用自动 agent 调度）
+4. 在项目的 `CLAUDE.md` 中添加以下 AMC 规则：
 
 ```markdown
 ## AMC SQL 知识库
@@ -89,6 +91,15 @@ Amazon Marketing Cloud (AMC) 是亚马逊广告的数据分析云平台。本知
 ### 自动模式
 
 安装后，Claude Code 会在你提到 AMC 或需要编写 AMC SQL 时自动参考知识库。这由 `CLAUDE.md` 中的规则触发。
+
+### `amc-expert` Agent（推荐）
+
+安装 agent 后，Claude Code 会在对话中检测到 AMC 相关话题时自动调度 `amc-expert` 子代理。该 agent 合并了 `/amc`（SQL 编写）和 `/amc-info`（知识问答）的全部能力，无需手动输入 slash command：
+
+```
+你：帮我写一个查询 DSP 广告 ROAS 的 SQL
+Claude：（自动调度 amc-expert agent，读取知识库，编写 SQL）
+```
 
 ### `/amc` 命令
 
@@ -202,7 +213,8 @@ A comprehensive Amazon Marketing Cloud (AMC) knowledge base designed for [Claude
 
 1. Copy the `knowledge_base/` directory to your project root
 2. Copy `.claude/commands/amc.md` and `.claude/commands/amc-info.md` to your project's `.claude/commands/` directory
-3. Add the following AMC rules to your project's `CLAUDE.md`:
+3. Copy `.claude/agents/amc-expert.md` to your project's `.claude/agents/` directory (optional, enables automatic agent dispatch)
+4. Add the following AMC rules to your project's `CLAUDE.md`:
 
 ```markdown
 ## AMC SQL Knowledge Base
@@ -221,6 +233,15 @@ You can also use the `/amc` command to enter AMC SQL assistant mode.
 #### Automatic Mode
 
 Once installed, Claude Code will automatically reference the AMC knowledge base when you mention AMC, Amazon Marketing Cloud, or ask to write AMC SQL queries. This is triggered by the rules in `CLAUDE.md`.
+
+#### `amc-expert` Agent (Recommended)
+
+With the agent installed, Claude Code automatically dispatches the `amc-expert` sub-agent when it detects AMC-related topics in conversation. This agent combines all capabilities of `/amc` (SQL writing) and `/amc-info` (knowledge Q&A) — no need to manually invoke slash commands:
+
+```
+You: Write a query to analyze DSP ad ROAS
+Claude: (auto-dispatches amc-expert agent, reads knowledge base, writes SQL)
+```
 
 #### `/amc` Command
 
