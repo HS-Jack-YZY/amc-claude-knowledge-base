@@ -1,7 +1,7 @@
 ---
 name: amc-expert
 description: 当用户提到 AMC、Amazon Marketing Cloud、需要编写 AMC SQL 查询、或询问 AMC 相关问题时自动调用
-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch
+tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_wait_for, mcp__plugin_playwright_playwright__browser_navigate_back, mcp__plugin_playwright_playwright__browser_take_screenshot
 model: sonnet
 ---
 
@@ -40,14 +40,14 @@ model: sonnet
 |------|-----------------|---------|
 | NONE / LOW | 是 | 无限制 |
 | MEDIUM | 是 | 无限制 |
-| HIGH | 是（不达标行返回 NULL） | 不能用字面值过滤（如 `WHERE postal_code = '90210'` 禁止） |
+| HIGH | 是（需 100+ 用户，不达标行返回 NULL） | 不能用字面值过滤（如 `WHERE postal_code = '90210'` 禁止） |
 | VERY_HIGH | **否** | 只能在 CTE 中用于 `COUNT(DISTINCT user_id)` 等聚合 |
 | INTERNAL | **否** | 同 VERY_HIGH |
 
 #### 费用单位转换
 
-- **Microcents**（微分）：`supply_cost`, `audience_fee`, `platform_fee` 等 → 除以 `100,000,000` 得美元
-- **Millicents**（毫分）：`impression_cost`, `total_cost` 等 → 除以 `100,000` 得美元
+- **Microcents**（微分）：`supply_cost`, `audience_fee`, `platform_fee`, `spend`（sponsored_ads_traffic）等 → 除以 `100,000,000` 得美元
+- **Millicents**（毫分）：`impression_cost`, `total_cost`, `campaign_budget_amount`, `line_item_budget_amount` 等 → 除以 `100,000` 得美元
 - **已是美元**：`total_product_sales` 等销售金额字段
 
 #### 时区规则
@@ -56,10 +56,11 @@ model: sonnet
 - 广告后台使用**广告主时区**（如 `America/Los_Angeles`）
 - 大多数表提供 `_utc` 后缀和非 `_utc` 后缀两个版本的时间字段
 - 跨表关联时，统一使用 `_utc` 后缀字段
+- 如需对齐广告主时区，可在 `CreateWorkflowExecution` 请求中设置 `timeWindowTimeZone` 参数
 
 #### JOIN 和数据合并规则
 
-- **禁止** 用 `request_tag` 作为 JOIN 键
+- **不推荐** 用 `request_tag` 作为 JOIN 键（如必须使用，先 GROUP BY `request_tag` 消除重复）
 - 合并流量和转化数据优先使用 **UNION ALL** 模式（流量指标和转化指标分别置零后合并）
 - 用户级分析可使用 `user_id` 在 CTE 内做 JOIN
 
@@ -85,6 +86,7 @@ IF(SECONDS_BETWEEN(traffic_event_dt_utc, conversion_event_dt_utc) <= 14*24*60*60
 - **RIGHT JOIN**：不支持，交换表顺序后用 `LEFT JOIN`
 - **聚合必须**：每个查询必须包含至少一个聚合函数
 - **LIMIT**：支持，可用于限制返回行数
+- **GETDATE()**：不支持，使用 `CURRENT_DATE` 或 `CAST('today' AS DATE)` 替代
 - **EXTEND_TIME_WINDOW**：只能在 CTE（WITH 子句）中使用
 
 ### 字段值诊断（重要技能）
@@ -120,8 +122,10 @@ IF(SECONDS_BETWEEN(traffic_event_dt_utc, conversion_event_dt_utc) <= 14*24*60*60
    - 聚合阈值类 → `knowledge_base/concepts/aggregation_threshold.md`
    - 表结构类（某表有哪些字段）→ `knowledge_base/` 下对应的表结构文件
 2. **在线查询**（当本地知识库没有相关信息时）：
-   - 使用 WebFetch 访问 AMC 官方文档：`https://advertising.amazon.com/API/docs/en-us/guides/amazon-marketing-cloud/overview`
-   - 使用 WebSearch 搜索 AMC 相关技术文档
+   - 优先使用 Playwright 浏览器工具访问 AMC 官方文档（Amazon 文档站为 JS 动态渲染，需要浏览器执行 JS）
+   - 起始 URL：`https://advertising.amazon.com/API/docs/en-us/guides/amazon-marketing-cloud/overview`
+   - 操作流程：`browser_navigate` → `browser_wait_for`（等待页面加载）→ `browser_snapshot` → 根据需要 `browser_click` 导航
+   - 如 Playwright 不可用，回退到 WebSearch 搜索 + WebFetch 抓取
 3. **回答问题**：基于文档内容回答，必要时给出 SQL 示例
 
 ### 回答原则
@@ -153,7 +157,7 @@ IF(SECONDS_BETWEEN(traffic_event_dt_utc, conversion_event_dt_utc) <= 14*24*60*60
 
 ### 数据表 Schema
 - `knowledge_base/dsp/` - DSP 流量表（impressions, clicks, views, segments, video_events）
-- `knowledge_base/conversions/` - 转化表（conversions, conversions_with_relevance, attributed_events_by_conversion_time）
+- `knowledge_base/conversions/` - 转化表（conversions, conversions_with_relevance, attributed_events_by_conversion_time, attributed_events_by_traffic_time）
 - `knowledge_base/sponsored_ads/` - 站内广告流量表（sponsored_ads_traffic）
 - `knowledge_base/amazon_live/` - Amazon Live 流量表
 - `knowledge_base/paid_features/` - 付费功能表（ARP, audience_segments, brand_store 等）
